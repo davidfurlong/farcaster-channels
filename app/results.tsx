@@ -154,6 +154,20 @@ export function Results() {
                       U3
                     </a>
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="w-[130px] justify-start"
+                    asChild
+                  >
+                    <a
+                      target="_blank"
+                      rel="noopener noreferer"
+                      href={`https://farcord.com/channels/${openChannelModal.id}`}
+                    >
+                      Farcord
+                    </a>
+                  </Button>
                 </div>
               ) : null}
             </DialogDescription>
