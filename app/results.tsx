@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { XIcon } from "lucide-react";
+import { GithubIcon, XIcon } from "lucide-react";
 
 export type Channel = {
   id: string;
@@ -185,6 +185,13 @@ export function Results() {
             height={28}
           />
           <h1 className="text-xl dark:text-violet-100">farcaster channels</h1>
+          <a
+            href="https://github.com/davidfurlong/farcaster-channels"
+            rel="noopener noreferer"
+            className="ml-auto"
+          >
+            <GithubIcon />
+          </a>
         </div>
         <input
           autoFocus
