@@ -69,6 +69,11 @@ export function Results() {
     fetchAsync();
   }, []);
 
+  const filteredResults = results.filter((result) => {
+    if (!q) return true;
+    return result.name.includes(q) || result.id.includes(q);
+  });
+
   return (
     <div className="flex flex-col">
       <Dialog
@@ -170,54 +175,68 @@ export function Results() {
         </DialogContent>
       </Dialog>
       <div className="gap-2 flex flex-col sticky top-0 py-2 bg-white dark:bg-black z-10 border-b border-b-violet-100 dark:border-b-violet-800 px-2">
-        <h1 className="text-xl dark:text-violet-100">farcaster channels</h1>
+        <div className="flex flex-row gap-2 items-center">
+          <Image
+            src={
+              "https://raw.githubusercontent.com/vrypan/farcaster-brand/main/icons/icon-rounded/purple-white.svg"
+            }
+            alt="farcaster"
+            width={28}
+            height={28}
+          />
+          <h1 className="text-xl dark:text-violet-100">farcaster channels</h1>
+        </div>
         <input
           autoFocus
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          className="w-[400px] ring-violet-500 focus:ring outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
-          placeholder="Search channels"
+          className="w-[400px] ring-violet-500 focus:ring-1 outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
+          placeholder={`Search ${
+            results.length ? `${results.length} ` : ""
+          }channels`}
         />
       </div>
-      <div>
-        {results.length === 0 && (
+      <div className="min-h-screen">
+        {results.length === 0 ? (
           <div className="px-2 py-2">Loading channels...</div>
-        )}
-        {results
-          .filter((result) => {
-            if (!q) return true;
-            return result.name.includes(q) || result.id.includes(q);
-          })
-          .map((result, i) => (
-            <div
-              key={result.id}
-              onClick={() => setOpenChannelModal(result)}
-              className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
-            >
-              <div className="w-[36px] h-[36px] flex-shrink-0">
-                <div className="w-[36px] h-[36px] absolute">
-                  <Image
-                    className="rounded-full"
-                    src={result.image_url}
-                    sizes="(max-width: 768px) 36px, 36px"
-                    priority={i < 30}
-                    quality={75}
-                    alt={result.id}
-                    fill
-                    style={{
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="font-bold">{result.name}</div>
-                <div className="text-violet-500 italic">/{result.id}</div>
-                {/* <div className="dark:text-violet-600">{result.description}</div> */}
+        ) : filteredResults.length === 0 ? (
+          <div className="px-2 py-2">No results</div>
+        ) : null}
+        {filteredResults.map((result, i) => (
+          <div
+            key={result.id}
+            onClick={() => setOpenChannelModal(result)}
+            className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
+          >
+            <div className="w-[36px] h-[36px] flex-shrink-0">
+              <div className="w-[36px] h-[36px] absolute">
+                <Image
+                  className="rounded-full"
+                  src={result.image_url}
+                  sizes="(max-width: 768px) 36px, 36px"
+                  priority={i < 30}
+                  quality={75}
+                  alt={result.id}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
               </div>
             </div>
-          ))}
+            <div>
+              <div className="font-bold">{result.name}</div>
+              <div className="text-violet-500 italic">/{result.id}</div>
+              {/* <div className="dark:text-violet-600">{result.description}</div> */}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="p-2">
+        Powered by <a href="https://www.modprotocol.org">Mod</a> and{" "}
+        <a href="https://www.neynar.com">Neynar</a>, made by{" "}
+        <a href="https://www.davidfurlong.me">@df</a>
       </div>
     </div>
   );
