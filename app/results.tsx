@@ -135,20 +135,6 @@ export function Results() {
                     <a
                       target="_blank"
                       rel="noopener noreferer"
-                      href={`https://flink.fyi/f/${openChannelModal.id}`}
-                    >
-                      Flink
-                    </a>
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[130px] justify-start"
-                    asChild
-                  >
-                    <a
-                      target="_blank"
-                      rel="noopener noreferer"
                       href={`https://opencast.stephancill.co.za/topic?url=${openChannelModal.url}`}
                     >
                       Opencast
