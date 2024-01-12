@@ -234,9 +234,30 @@ export function Results() {
         ))}
       </div>
       <div className="p-2">
-        Powered by <a href="https://www.modprotocol.org">Mod</a> and{" "}
-        <a href="https://www.neynar.com">Neynar</a>, made by{" "}
-        <a href="https://www.davidfurlong.me">@df</a>
+        Powered by{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferer"
+          href="https://www.modprotocol.org"
+        >
+          Mod
+        </a>{" "}
+        and{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferer"
+          href="https://www.neynar.com"
+        >
+          Neynar
+        </a>
+        , made by{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferer"
+          href="https://www.davidfurlong.me"
+        >
+          @df
+        </a>
       </div>
     </div>
   );
