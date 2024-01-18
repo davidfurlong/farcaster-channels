@@ -101,7 +101,7 @@ export function Results() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-[130px] justify-start"
+                    className="w-[140px] justify-start"
                     asChild
                   >
                     <a
@@ -115,7 +115,7 @@ export function Results() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-[130px] justify-start"
+                    className="w-[140px] justify-start"
                     asChild
                   >
                     <a
@@ -129,7 +129,7 @@ export function Results() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-[130px] justify-start"
+                    className="w-[140px] justify-start"
                     asChild
                   >
                     <a
@@ -143,7 +143,7 @@ export function Results() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-[130px] justify-start"
+                    className="w-[140px] justify-start"
                     asChild
                   >
                     <a
@@ -157,7 +157,7 @@ export function Results() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="w-[130px] justify-start"
+                    className="w-[140px] justify-start"
                     asChild
                   >
                     <a
@@ -166,6 +166,20 @@ export function Results() {
                       href={`https://farcord.com/channels/${openChannelModal.id}`}
                     >
                       Farcord
+                    </a>
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="w-[140px] justify-start"
+                    asChild
+                  >
+                    <a
+                      target="_blank"
+                      rel="noopener noreferer"
+                      href={`https://far.quest/channel/${openChannelModal.id}`}
+                    >
+                      Cast by far.quest
                     </a>
                   </Button>
                 </div>
