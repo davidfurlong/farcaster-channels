@@ -12,7 +12,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { GithubIcon, XIcon } from "lucide-react";
+import {
+  ArrowDownAzIcon,
+  ArrowDownUpIcon,
+  ArrowDownZaIcon,
+  ArrowDown10Icon,
+  ArrowDown01Icon,
+  GithubIcon,
+  XIcon,
+} from "lucide-react";
 
 export type Channel = {
   id: string;
@@ -41,13 +49,33 @@ export type Channel = {
   };
 };
 
+type SortDirection = number;
+const sortAttributes = ['id', 'created_at'] as const;
+type SortAttribute = typeof sortAttributes[number];
+
+function toggleSortDirection(direction: SortDirection) {
+  return direction * -1
+}
+function cycleSortAttribute(attribute: SortAttribute) {
+  const index = sortAttributes.indexOf(attribute);
+  const nextIndex = (index + 1) % sortAttributes.length;
+  return sortAttributes[nextIndex];
+}
+
+interface SortMethod {
+  attribute: SortAttribute
+  direction: SortDirection
+}
+
 export function Results() {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Channel[]>([]);
+  const [filteredResults, setFilteredResults] = useState<Channel[]>([]);
+  const [sortMethod, setSortMethod] = useState<SortMethod>({attribute: 'id', direction: 1});
   const [openChannelModal, setOpenChannelModal] = useState<Channel | null>(
     null
   );
-
+  
   useEffect(() => {
     async function fetchAsync() {
       const newResults = await fetch(
@@ -69,10 +97,23 @@ export function Results() {
     fetchAsync();
   }, []);
 
-  const filteredResults = results.filter((result) => {
-    if (!q) return true;
-    return result.name.includes(q) || result.id.includes(q);
-  });
+  useEffect(() => {
+    const sortedResults = 
+      (sortMethod.attribute === 'created_at') ?
+        results.sort((a, b) =>
+          (a.created_at > b.created_at ? 1 : -1 ) * Math.sign(sortMethod.direction)
+        ) :
+        results.sort((a, b) =>
+          (a.id > b.id ? 1 : -1) * Math.sign(sortMethod.direction)
+        );
+
+    setFilteredResults(sortedResults.filter((result) => {
+      if (!q) return true;
+      return result.name.includes(q) || result.id.includes(q);
+    }));
+        
+  }, [q, results, sortMethod.attribute, sortMethod.direction])
+
 
   return (
     <div className="flex flex-col">
@@ -207,16 +248,46 @@ export function Results() {
             <GithubIcon />
           </a>
         </div>
-        <input
-          autoFocus
-          type="search"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-[400px] ring-violet-500 focus:ring-1 outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
-          placeholder={`Search ${
-            results.length ? `${results.length} ` : ""
-          }channels`}
-        />
+        <div className="flex no-wrap">
+          <input
+            autoFocus
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="w-[400px] ring-violet-500 focus:ring-1 outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
+            placeholder={`Search ${
+              results.length ? `${results.length} ` : ""
+            }channels`}
+          />
+          <ArrowDownUpIcon onClick={() => setSortMethod({
+            attribute: sortMethod.attribute,
+            direction: toggleSortDirection(sortMethod.direction)
+            })} />
+          {sortMethod.attribute === 'id' ? 
+            (sortMethod.direction > 0 ? 
+              <ArrowDownAzIcon onClick={() => {
+                setSortMethod({
+                  attribute: cycleSortAttribute(sortMethod.attribute),
+                  direction: sortMethod.direction
+                })}} /> : 
+              <ArrowDownZaIcon onClick={() => {
+                setSortMethod({
+                  attribute: cycleSortAttribute(sortMethod.attribute),
+                  direction: sortMethod.direction
+                })}} />) :
+            (sortMethod.direction > 0 ? 
+              <ArrowDown01Icon onClick={() => {
+                setSortMethod({
+                  attribute: cycleSortAttribute(sortMethod.attribute),
+                  direction: sortMethod.direction
+                })}} /> :
+              <ArrowDown10Icon  onClick={() => {
+                setSortMethod({
+                  attribute: cycleSortAttribute(sortMethod.attribute),
+                  direction: sortMethod.direction
+                })}} />)
+          }
+        </div>
       </div>
       <div className="min-h-screen">
         {results.length === 0 ? (
@@ -224,35 +295,37 @@ export function Results() {
         ) : filteredResults.length === 0 ? (
           <div className="px-2 py-2">No results</div>
         ) : null}
-        {filteredResults.map((result, i) => (
-          <div
-            key={result.id}
-            onClick={() => setOpenChannelModal(result)}
-            className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
-          >
-            <div className="w-[36px] h-[36px] flex-shrink-0">
-              <div className="w-[36px] h-[36px] absolute">
-                <Image
-                  className="rounded-full"
-                  src={result.image_url}
-                  sizes="(max-width: 768px) 36px, 36px"
-                  priority={i < 30}
-                  quality={75}
-                  alt={result.id}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
+        {filteredResults.map((result, i) => {
+          const dateObj = new Date(result.created_at * 1000)
+          return (
+            <div
+              key={result.id}
+              onClick={() => setOpenChannelModal(result)}
+              className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
+            >
+              <div className="w-[36px] h-[36px] flex-shrink-0">
+                <div className="w-[36px] h-[36px] absolute">
+                  <Image
+                    className="rounded-full"
+                    src={result.image_url}
+                    sizes="(max-width: 768px) 36px, 36px"
+                    priority={i < 30}
+                    quality={75}
+                    alt={result.id}
+                    fill
+                    style={{
+                      objectFit: "cover",
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="font-bold">{result.name}</div>
+                <div className="text-violet-500 italic">/{result.id}</div>
+                <div className="dark:text-violet-600 italic text-xs">created: {dateObj.toLocaleDateString()}</div>
               </div>
             </div>
-            <div>
-              <div className="font-bold">{result.name}</div>
-              <div className="text-violet-500 italic">/{result.id}</div>
-              {/* <div className="dark:text-violet-600">{result.description}</div> */}
-            </div>
-          </div>
-        ))}
+        )})}
       </div>
       <div className="p-2">
         Powered by{" "}
