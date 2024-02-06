@@ -11,16 +11,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdownMenu";
 import { Button } from "@/components/ui/button";
 import {
-  ArrowDownAzIcon,
-  ArrowDownUpIcon,
-  ArrowDownZaIcon,
-  ArrowDown10Icon,
-  ArrowDown01Icon,
   GithubIcon,
-  XIcon,
 } from "lucide-react";
+import { alphaAscendingSortMethod, alphaDescendingSortMethod, createdAtNewestFirstSortMethod, createdAtOldestFirstSortMethod } from "@/lib/sortMethods";
 
 export type Channel = {
   id: string;
@@ -49,29 +51,11 @@ export type Channel = {
   };
 };
 
-type SortDirection = number;
-const sortAttributes = ['id', 'created_at'] as const;
-type SortAttribute = typeof sortAttributes[number];
-
-function toggleSortDirection(direction: SortDirection) {
-  return direction * -1
-}
-function cycleSortAttribute(attribute: SortAttribute) {
-  const index = sortAttributes.indexOf(attribute);
-  const nextIndex = (index + 1) % sortAttributes.length;
-  return sortAttributes[nextIndex];
-}
-
-interface SortMethod {
-  attribute: SortAttribute
-  direction: SortDirection
-}
-
 export function Results() {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Channel[]>([]);
   const [filteredResults, setFilteredResults] = useState<Channel[]>([]);
-  const [sortMethod, setSortMethod] = useState<SortMethod>({attribute: 'id', direction: 1});
+  const [sortMethod, setSortMethod] = useState('alpha-asc');
   const [openChannelModal, setOpenChannelModal] = useState<Channel | null>(
     null
   );
@@ -98,13 +82,18 @@ export function Results() {
   }, []);
 
   useEffect(() => {
+    const sortMethodObj = sortMethod === 'alpha-asc' ? alphaAscendingSortMethod :
+      sortMethod === 'alpha-desc' ? alphaDescendingSortMethod :
+      sortMethod === 'date-asc' ? createdAtNewestFirstSortMethod :
+      createdAtOldestFirstSortMethod;
+
     const sortedResults = 
-      (sortMethod.attribute === 'created_at') ?
+      (sortMethodObj.attribute === 'created_at') ?
         results.sort((a, b) =>
-          (a.created_at > b.created_at ? 1 : -1 ) * Math.sign(sortMethod.direction)
+          (a.created_at > b.created_at ? 1 : -1 ) * Math.sign(sortMethodObj.direction)
         ) :
         results.sort((a, b) =>
-          (a.id > b.id ? 1 : -1) * Math.sign(sortMethod.direction)
+          (a.id > b.id ? 1 : -1) * Math.sign(sortMethodObj.direction)
         );
 
     setFilteredResults(sortedResults.filter((result) => {
@@ -112,8 +101,9 @@ export function Results() {
       return result.name.includes(q) || result.id.includes(q);
     }));
         
-  }, [q, results, sortMethod.attribute, sortMethod.direction])
+  }, [q, results, sortMethod])
 
+  const dateObj = openChannelModal ? new Date(openChannelModal.created_at * 1000) : null
 
   return (
     <div className="flex flex-col">
@@ -135,6 +125,7 @@ export function Results() {
                     /{openChannelModal.id}
                   </span>
                   <span className="italic">{openChannelModal.description}</span>
+                  <span className="text-violet-600 italic">created: {dateObj?.toLocaleDateString()}</span>
                   <div className="py-2">
                     <hr />
                   </div>
@@ -259,34 +250,16 @@ export function Results() {
               results.length ? `${results.length} ` : ""
             }channels`}
           />
-          <ArrowDownUpIcon onClick={() => setSortMethod({
-            attribute: sortMethod.attribute,
-            direction: toggleSortDirection(sortMethod.direction)
-            })} />
-          {sortMethod.attribute === 'id' ? 
-            (sortMethod.direction > 0 ? 
-              <ArrowDownAzIcon onClick={() => {
-                setSortMethod({
-                  attribute: cycleSortAttribute(sortMethod.attribute),
-                  direction: sortMethod.direction
-                })}} /> : 
-              <ArrowDownZaIcon onClick={() => {
-                setSortMethod({
-                  attribute: cycleSortAttribute(sortMethod.attribute),
-                  direction: sortMethod.direction
-                })}} />) :
-            (sortMethod.direction > 0 ? 
-              <ArrowDown01Icon onClick={() => {
-                setSortMethod({
-                  attribute: cycleSortAttribute(sortMethod.attribute),
-                  direction: sortMethod.direction
-                })}} /> :
-              <ArrowDown10Icon  onClick={() => {
-                setSortMethod({
-                  attribute: cycleSortAttribute(sortMethod.attribute),
-                  direction: sortMethod.direction
-                })}} />)
-          }
+          <DropdownMenuContent className="w-60" sideOffset={5} onSelect={() => setSortMethod}>
+            <DropdownMenuLabel className="DropdownMenuLabel">Sort by...</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={sortMethod} onValueChange={setSortMethod}>
+              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="alpha-asc">Alphabetical, A-Z</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="alpha-desc">Alphabetical, Z-A</DropdownMenuRadioItem>
+              <DropdownMenuSeparator className="h-0.5 bg-gray-500 m-0.25"  />
+              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="date-new">Date, Newest First</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="date-old">Date, Oldest First, A-Z</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
         </div>
       </div>
       <div className="min-h-screen">
@@ -296,7 +269,6 @@ export function Results() {
           <div className="px-2 py-2">No results</div>
         ) : null}
         {filteredResults.map((result, i) => {
-          const dateObj = new Date(result.created_at * 1000)
           return (
             <div
               key={result.id}
@@ -322,7 +294,7 @@ export function Results() {
               <div>
                 <div className="font-bold">{result.name}</div>
                 <div className="text-violet-500 italic">/{result.id}</div>
-                <div className="dark:text-violet-600 italic text-xs">created: {dateObj.toLocaleDateString()}</div>
+                {/* <div className="dark:text-violet-600 italic text-xs">{result.description}</div> */}
               </div>
             </div>
         )})}
