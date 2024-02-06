@@ -232,7 +232,7 @@ export function Results() {
           />
           <h1 className="text-xl dark:text-violet-100">farcaster channels</h1>
           <a
-            href="https://github.com/davidfurlong/farcaster-channels"
+            href="https://github.com/artlu99/farcaster-channels"
             rel="noopener noreferer"
             className="ml-auto"
           >
