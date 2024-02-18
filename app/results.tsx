@@ -84,7 +84,7 @@ export function Results() {
   useEffect(() => {
     const sortMethodObj = sortMethod === 'alpha-asc' ? alphaAscendingSortMethod :
       sortMethod === 'alpha-desc' ? alphaDescendingSortMethod :
-      sortMethod === 'date-asc' ? createdAtNewestFirstSortMethod :
+      sortMethod === 'date-new' ? createdAtNewestFirstSortMethod :
       createdAtOldestFirstSortMethod;
 
     const sortedResults = 
