@@ -17,7 +17,7 @@ const DropdownMenuContent = React.forwardRef<
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <button
-       className="rounded-lg w-[36px] h-[38px] mx-2 inline-flex items-center justify-center outline-none hover:bg-violet-900/50 gap-4 border bg-background shadow-lg focus:shadow-[0_0_0_2px] focus:shadow-violet-900"
+       className="rounded-lg w-[72px] md:w-[36px] h-[38px] mx-2 inline-flex items-center justify-center outline-none hover:bg-violet-900/50 gap-4 border bg-background shadow-lg focus:shadow-[0_0_0_2px] focus:shadow-violet-900"
        aria-label="Dropdown options"
       >
         <ArrowDownUpIcon />
@@ -53,7 +53,7 @@ const DropdownMenuRadioItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
-    className={cn("inline-flex my-0.5")}
+    className={cn("inline-flex my-4 md:my-0.5")}
     {...props}
   >
     {children}
