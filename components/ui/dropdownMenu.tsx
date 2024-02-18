@@ -17,7 +17,7 @@ const DropdownMenuContent = React.forwardRef<
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <button
-       className="rounded-lg w-[35px] h-[35px] mx-2 inline-flex items-center justify-center outline-none hover:bg-violet-900/50 gap-4 border bg-background shadow-lg focus:shadow-[0_0_0_2px] focus:shadow-violet-900"
+       className="rounded-lg w-[36px] h-[38px] mx-2 inline-flex items-center justify-center outline-none hover:bg-violet-900/50 gap-4 border bg-background shadow-lg focus:shadow-[0_0_0_2px] focus:shadow-violet-900"
        aria-label="Dropdown options"
       >
         <ArrowDownUpIcon />
@@ -28,7 +28,7 @@ const DropdownMenuContent = React.forwardRef<
       <DropdownMenuPrimitive.Content
         ref={ref}
         className={cn(
-          "z-40 min-w-[220px] bg-violet-900/50 rounded-md border font-mono p-[5px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade",
+          "z-40 min-w-[220px] bg-violet-950/90 rounded-md border border-violet-600 font-mono p-[5px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade",
           className
         )}
         sideOffset={5}
@@ -68,7 +68,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
   ref={ref}
-  className={cn(" h-0.5 bg-violet-400/50")}
+  className={cn(" h-0.5 bg-violet-900")}
     {...props}
   >
     {children}

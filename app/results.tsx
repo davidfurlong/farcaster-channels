@@ -250,14 +250,14 @@ export function Results() {
               results.length ? `${results.length} ` : ""
             }channels`}
           />
-          <DropdownMenuContent className="w-60" sideOffset={5}>
-            <DropdownMenuLabel className="DropdownMenuLabel">Sort by...</DropdownMenuLabel>
+          <DropdownMenuContent className="w-60">
+            <DropdownMenuLabel>Sort by...</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={sortMethod} onValueChange={setSortMethod}>
-              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="alpha-asc">Alphabetical, A-Z</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="alpha-desc">Alphabetical, Z-A</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="date-new">Date, Newest First</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem className="DropdownMenuRadioItem" value="date-old">Date, Oldest First, A-Z</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="alpha-asc">Alphabetical, A-Z</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="alpha-desc">Alphabetical, Z-A</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="date-new">Date, Newest First</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="date-old">Date, Oldest First</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </div>
