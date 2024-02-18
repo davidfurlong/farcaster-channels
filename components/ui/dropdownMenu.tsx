@@ -16,22 +16,27 @@ const DropdownMenuContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <button className="IconButton" aria-label="Dropdown options">
+      <button
+       className="rounded-lg w-[35px] h-[35px] mx-2 inline-flex items-center justify-center outline-none hover:bg-violet-900/50 gap-4 border bg-background shadow-lg focus:shadow-[0_0_0_2px] focus:shadow-violet-900"
+       aria-label="Dropdown options"
+      >
         <ArrowDownUpIcon />
       </button>
     </DropdownMenuTrigger>
-  <DropdownMenuPortal>
-    <DropdownMenuPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-state=open:animate-in data-state=closed:animate-out data-state=closed:fade-out-0 data-state=open:fade-in-0 data-state=closed:zoom-out-95 data-state=open:zoom-in-95 data-state=closed:slide-out-to-left-1/2 data-state=closed:slide-out-to-top-[48%] data-state=open:slide-in-from-left-1/2 data-state=open:slide-in-from-top-[48%] sm:rounded-lg",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </DropdownMenuPrimitive.Content>
-  </DropdownMenuPortal>
+
+    <DropdownMenuPortal>
+      <DropdownMenuPrimitive.Content
+        ref={ref}
+        className={cn(
+          "z-40 min-w-[220px] bg-violet-900/50 rounded-md border font-mono p-[5px] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade",
+          className
+        )}
+        sideOffset={5}
+        {...props}
+      >
+        {children}
+      </DropdownMenuPrimitive.Content>
+    </DropdownMenuPortal>
   </DropdownMenu>
 ))
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName
@@ -48,7 +53,7 @@ const DropdownMenuRadioItem = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
-    className={cn("inline-flex")}
+    className={cn("inline-flex my-0.5")}
     {...props}
   >
     {children}
@@ -57,9 +62,21 @@ const DropdownMenuRadioItem = React.forwardRef<
 ))
 DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName
 
-const DropdownMenuItemIndicator = DropdownMenuPrimitive.ItemIndicator
+const DropdownMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator
+  ref={ref}
+  className={cn(" h-0.5 bg-violet-400/50")}
+    {...props}
+  >
+    {children}
+  </DropdownMenuPrimitive.Separator>
+))
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.DropdownMenuSeparator.displayName
 
-const DropdownMenuSeparator = DropdownMenuPrimitive.Separator
+const DropdownMenuItemIndicator = DropdownMenuPrimitive.ItemIndicator
 
 export {
   DropdownMenuContent,
