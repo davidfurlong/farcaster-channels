@@ -182,7 +182,7 @@ export function Results() {
           </a>
         </div>
       </div>
-      <div className="min-h-screen w-4/5 px-2 mx-8 justify-items-center">
+      <div className="min-h-screen px-2 w-full md:w-4/5 md:mx-8 justify-items-center">
         <DataTable data={results} onClickAction={setOpenChannelModal} />
       </div>
       <div className="p-2">
