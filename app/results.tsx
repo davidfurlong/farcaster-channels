@@ -11,51 +11,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator
-} from "@/components/ui/dropdownMenu";
 import { Button } from "@/components/ui/button";
 import {
   GithubIcon,
 } from "lucide-react";
-import { alphaAscendingSortMethod, alphaDescendingSortMethod, createdAtNewestFirstSortMethod, createdAtOldestFirstSortMethod } from "@/lib/sortMethods";
-
-export type Channel = {
-  id: string;
-  url: string;
-  name: string;
-  description: string;
-  object: "channel";
-  image_url: string;
-  created_at: number;
-  parent_url: string;
-  lead: {
-    object: "user";
-    fid: number;
-    username: string;
-    display_name: string;
-    pfp_url: string;
-    profile: {
-      bio: {
-        text: string;
-      };
-    };
-    follower_count: number;
-    following_count: number;
-    verifications: string[];
-    active_status: "active" | "inactive";
-  };
-};
+import { DataTable } from "@/components/data-table";
+import { Channel } from "./types";
 
 export function Results() {
-  const [q, setQ] = useState("");
   const [results, setResults] = useState<Channel[]>([]);
-  const [filteredResults, setFilteredResults] = useState<Channel[]>([]);
-  const [sortMethod, setSortMethod] = useState('alpha-asc');
   const [openChannelModal, setOpenChannelModal] = useState<Channel | null>(
     null
   );
@@ -80,28 +44,6 @@ export function Results() {
 
     fetchAsync();
   }, []);
-
-  useEffect(() => {
-    const sortMethodObj = sortMethod === 'alpha-asc' ? alphaAscendingSortMethod :
-      sortMethod === 'alpha-desc' ? alphaDescendingSortMethod :
-      sortMethod === 'date-new' ? createdAtNewestFirstSortMethod :
-      createdAtOldestFirstSortMethod;
-
-    const sortedResults = 
-      (sortMethodObj.attribute === 'created_at') ?
-        results.sort((a, b) =>
-          (a.created_at > b.created_at ? 1 : -1 ) * Math.sign(sortMethodObj.direction)
-        ) :
-        results.sort((a, b) =>
-          (a.id > b.id ? 1 : -1) * Math.sign(sortMethodObj.direction)
-        );
-
-    setFilteredResults(sortedResults.filter((result) => {
-      if (!q) return true;
-      return result.name.includes(q) || result.id.includes(q);
-    }));
-        
-  }, [q, results, sortMethod])
 
   const dateObj = openChannelModal ? new Date(openChannelModal.created_at * 1000) : null
 
@@ -239,65 +181,9 @@ export function Results() {
             <GithubIcon />
           </a>
         </div>
-        <div className="flex no-wrap">
-          <input
-            autoFocus
-            type="search"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            className="w-[400px] ring-violet-500 focus:ring-1 outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
-            placeholder={`Search ${
-              results.length ? `${results.length} ` : ""
-            }channels`}
-          />
-          <DropdownMenuContent className="w-96 md:w-60">
-            <DropdownMenuLabel>Sort by...</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup value={sortMethod} onValueChange={setSortMethod}>
-              <DropdownMenuRadioItem value="alpha-asc">Alphabetical, A-Z</DropdownMenuRadioItem><br />
-              <DropdownMenuRadioItem value="alpha-desc">Alphabetical, Z-A</DropdownMenuRadioItem><br />
-              <DropdownMenuRadioItem value="date-new">Date, Newest First</DropdownMenuRadioItem><br />
-              <DropdownMenuRadioItem value="date-old">Date, Oldest First</DropdownMenuRadioItem><br />
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </div>
       </div>
-      <div className="min-h-screen">
-        {results.length === 0 ? (
-          <div className="px-2 py-2">Loading channels...</div>
-        ) : filteredResults.length === 0 ? (
-          <div className="px-2 py-2">No results</div>
-        ) : null}
-        {filteredResults.map((result, i) => {
-          return (
-            <div
-              key={result.id}
-              onClick={() => setOpenChannelModal(result)}
-              className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
-            >
-              <div className="w-[36px] h-[36px] flex-shrink-0">
-                <div className="w-[36px] h-[36px] absolute">
-                  <Image
-                    className="rounded-full"
-                    src={result.image_url}
-                    sizes="(max-width: 768px) 36px, 36px"
-                    priority={i < 30}
-                    quality={75}
-                    alt={result.id}
-                    fill
-                    style={{
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="font-bold">{result.name}</div>
-                <div className="text-violet-500 italic">/{result.id}</div>
-                {/* <div className="dark:text-violet-600 italic text-xs">{result.description}</div> */}
-              </div>
-            </div>
-        )})}
+      <div className="min-h-screen w-4/5 px-2 mx-8 justify-items-center">
+        <DataTable data={results} onClickAction={setOpenChannelModal} />
       </div>
       <div className="p-2">
         Powered by{" "}
