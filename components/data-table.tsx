@@ -135,8 +135,6 @@ export const DataTable = (props: {
     },
   })
 
-  table.setPageSize(400)
-
   return (
     <div>
       <div className="flex items-center py-4">
