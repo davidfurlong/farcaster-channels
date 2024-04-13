@@ -6,59 +6,45 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { GithubIcon, XIcon } from "lucide-react";
-
-export type Channel = {
-  id: string;
-  url: string;
-  name: string;
-  description: string;
-  object: "channel";
-  image_url: string;
-  created_at: number;
-  parent_url: string;
-  lead: {
-    object: "user";
-    fid: number;
-    username: string;
-    display_name: string;
-    pfp_url: string;
-    profile: {
-      bio: {
-        text: string;
-      };
-    };
-    follower_count: number;
-    following_count: number;
-    verifications: string[];
-    active_status: "active" | "inactive";
-  };
-};
+import { GithubIcon } from "lucide-react";
+import { Channels } from "@/lib/db";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export function Results() {
-  const [q, setQ] = useState("");
-  const [results, setResults] = useState<Channel[]>([]);
-  const [openChannelModal, setOpenChannelModal] = useState<Channel | null>(
+  const [results, setResults] = useState<Channels[]>([]);
+  const [openChannelModal, setOpenChannelModal] = useState<Channels | null>(
     null
   );
+  const searchParams = useSearchParams();
+  const selectedChannelId = searchParams.get("channel");
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (selectedChannelId) {
+      const selectedChannel = results.find(
+        (channel) => channel.id === selectedChannelId
+      );
+      if (selectedChannel) setOpenChannelModal(selectedChannel);
+      router.push(`${pathname}`);
+    }
+  }, [selectedChannelId]);
 
   useEffect(() => {
     async function fetchAsync() {
-      const newResults = await fetch(
-        `https://api.modprotocol.org/api/farcaster/channels/v2?hideVirtualChannels=true&q=`
-      );
+      const newResults = await fetch(`/channels`);
       try {
         const newResultsJson = await newResults.json();
 
         setResults(
-          (newResultsJson.channels as Channel[]).sort((a, b) =>
-            a.id > b.id ? 1 : -1
+          (newResultsJson.channels as Channels[]).sort((a, b) =>
+            a.id! > b.id! ? 1 : -1
           )
         );
       } catch (err) {
@@ -68,11 +54,6 @@ export function Results() {
 
     fetchAsync();
   }, []);
-
-  const filteredResults = results.filter((result) => {
-    if (!q) return true;
-    return result.name.includes(q) || result.id.includes(q);
-  });
 
   return (
     <div className="flex flex-col">
@@ -193,71 +174,16 @@ export function Results() {
             <GithubIcon />
           </a>
         </div>
-        <input
-          autoFocus
-          type="search"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-[400px] ring-violet-500 focus:ring-1 outline-none max-w-full bg-violet-50 border border-violet-200 text-violet-900 text-sm rounded focus:border-violet-300 block p-2 dark:bg-violet-950 dark:border-violet-600 dark:placeholder-violet-400 dark:text-violet-300"
-          placeholder={`Search ${
-            results.length ? `${results.length} ` : ""
-          }channels`}
-        />
       </div>
-      <div className="min-h-screen">
+      <div className="min-h-[600px] border-b">
         {results.length === 0 ? (
-          <div className="px-2 py-2">Loading channels...</div>
-        ) : filteredResults.length === 0 ? (
-          <div className="px-2 py-2">No results</div>
-        ) : null}
-        {filteredResults.map((result, i) => (
-          <div
-            key={result.id}
-            onClick={() => setOpenChannelModal(result)}
-            className="cursor-pointer flex flex-row gap-2 hover:bg-white dark:hover:bg-black items-center border-b py-2 border-b-violet-100 dark:border-violet-950 px-2"
-          >
-            <div className="w-[36px] h-[36px] flex-shrink-0">
-              <div className="w-[36px] h-[36px] absolute">
-                <Image
-                  className="rounded-full"
-                  src={result.image_url}
-                  sizes="(max-width: 768px) 36px, 36px"
-                  priority={i < 30}
-                  quality={75}
-                  alt={result.id}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="font-bold">{result.name}</div>
-              <div className="text-violet-500 italic">/{result.id}</div>
-              {/* <div className="dark:text-violet-600">{result.description}</div> */}
-            </div>
-          </div>
-        ))}
+          <div className="px-2 py-2">Loading thousands of channels...</div>
+        ) : (
+          <DataTable columns={columns} data={results} />
+        )}
       </div>
       <div className="p-2">
-        Powered by{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferer"
-          href="https://www.modprotocol.org"
-        >
-          Mod
-        </a>{" "}
-        and{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferer"
-          href="https://www.neynar.com"
-        >
-          Neynar
-        </a>
-        , made by{" "}
+        This site is MIT Licensed Open Source software, made by{" "}
         <a
           target="_blank"
           rel="noopener noreferer"
