@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createKysely } from "@vercel/postgres-kysely";
 import { DB } from "@/lib/db";
 
-export const maxDuration = 900000;
+export const maxDuration = 300;
 
 export const dynamic = "force-dynamic";
 
