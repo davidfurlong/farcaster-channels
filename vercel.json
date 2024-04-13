@@ -1,0 +1,8 @@
+{
+    "crons": [
+        {
+            "path": "/channels/cache",
+            "schedule": "*/10 * * * *"
+        }
+    ]
+}
