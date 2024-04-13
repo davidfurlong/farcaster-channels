@@ -4,6 +4,8 @@ import { DB } from "@/lib/db";
 
 export const maxDuration = 900000;
 
+export const dynamic = "force-dynamic";
+
 const db = createKysely<DB>();
 
 export async function GET() {

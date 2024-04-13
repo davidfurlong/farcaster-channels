@@ -133,6 +133,7 @@ export const columns: ColumnDef<Channels>[] = [
           {(row.getValue("hosts") as any[])?.map((host) => {
             return (
               <a
+                key={host.username}
                 href={`https://warpcast.com/${host.username}`}
                 target="_blank"
                 rel="noreferer noopener"
