@@ -2,13 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 import { Channels } from "@/lib/db";
@@ -18,9 +12,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export function Results() {
   const [results, setResults] = useState<Channels[]>([]);
-  const [openChannelModal, setOpenChannelModal] = useState<Channels | null>(
-    null
-  );
+  const [openChannelModal, setOpenChannelModal] = useState<Channels | null>(null);
   const searchParams = useSearchParams();
   const selectedChannelId = searchParams.get("channel");
   const router = useRouter();
@@ -28,9 +20,7 @@ export function Results() {
 
   useEffect(() => {
     if (selectedChannelId) {
-      const selectedChannel = results.find(
-        (channel) => channel.id === selectedChannelId
-      );
+      const selectedChannel = results.find((channel) => channel.id === selectedChannelId);
       if (selectedChannel) setOpenChannelModal(selectedChannel);
       router.push(`${pathname}`);
     }
@@ -42,11 +32,7 @@ export function Results() {
       try {
         const newResultsJson = await newResults.json();
 
-        setResults(
-          (newResultsJson.channels as Channels[]).sort((a, b) =>
-            a.id! > b.id! ? 1 : -1
-          )
-        );
+        setResults((newResultsJson.channels as Channels[]).sort((a, b) => (a.id! > b.id! ? 1 : -1)));
       } catch (err) {
         console.error(err);
       }
@@ -71,20 +57,13 @@ export function Results() {
             <DialogDescription>
               {openChannelModal ? (
                 <div className="flex flex-col gap-2 mt-2">
-                  <span className="text-violet-600 italic">
-                    /{openChannelModal.id}
-                  </span>
+                  <span className="text-violet-600 italic">/{openChannelModal.id}</span>
                   <span className="italic">{openChannelModal.description}</span>
                   <div className="py-2">
                     <hr />
                   </div>
                   <span className="font-bold">Open in</span>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -93,12 +72,7 @@ export function Results() {
                       Warpcast
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -107,12 +81,7 @@ export function Results() {
                       Supercast
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -121,12 +90,7 @@ export function Results() {
                       Opencast
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -135,12 +99,7 @@ export function Results() {
                       U3
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -149,12 +108,7 @@ export function Results() {
                       Farcord
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-[140px] justify-start"
-                    asChild
-                  >
+                  <Button size="sm" variant="secondary" className="w-[140px] justify-start" asChild>
                     <a
                       target="_blank"
                       rel="noopener noreferer"
@@ -172,24 +126,18 @@ export function Results() {
       <div className="gap-2 flex flex-col sticky top-0 py-2 bg-white dark:bg-black z-10 border-b border-b-violet-100 dark:border-b-violet-800 px-2">
         <div className="flex flex-row gap-2 items-center">
           <Image
-            src={
-              "https://raw.githubusercontent.com/vrypan/farcaster-brand/main/icons/icon-rounded/purple-white.svg"
-            }
+            src={"https://raw.githubusercontent.com/vrypan/farcaster-brand/main/icons/icon-rounded/purple-white.svg"}
             alt="farcaster"
             width={28}
             height={28}
           />
           <h1 className="text-xl dark:text-violet-100">farcaster channels</h1>
-          <a
-            href="https://github.com/davidfurlong/farcaster-channels"
-            rel="noopener noreferer"
-            className="ml-auto"
-          >
+          <a href="https://github.com/davidfurlong/farcaster-channels" rel="noopener noreferer" className="ml-auto">
             <GithubIcon />
           </a>
         </div>
       </div>
-      <div className="min-h-[600px] border-b">
+      <div className="h-[calc(100dvh-5.25rem)] border-b">
         {results.length === 0 ? (
           <div className="px-2 py-2">Loading thousands of channels...</div>
         ) : (
@@ -198,11 +146,7 @@ export function Results() {
       </div>
       <div className="p-2">
         This site is MIT Licensed Open Source software, made by{" "}
-        <a
-          target="_blank"
-          rel="noopener noreferer"
-          href="https://www.davidfurlong.me"
-        >
+        <a target="_blank" rel="noopener noreferer" href="https://www.davidfurlong.me">
           @df
         </a>
       </div>
