@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 import { Channels } from "@/lib/db";
@@ -12,7 +18,9 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export function Results() {
   const [results, setResults] = useState<Channels[]>([]);
-  const [openChannelModal, setOpenChannelModal] = useState<Channels | null>(null);
+  const [openChannelModal, setOpenChannelModal] = useState<Channels | null>(
+    null
+  );
   const searchParams = useSearchParams();
   const selectedChannelId = searchParams.get("channel");
   const router = useRouter();
@@ -20,7 +28,9 @@ export function Results() {
 
   useEffect(() => {
     if (selectedChannelId) {
-      const selectedChannel = results.find((channel) => channel.id === selectedChannelId);
+      const selectedChannel = results.find(
+        (channel) => channel.id === selectedChannelId
+      );
       if (selectedChannel) setOpenChannelModal(selectedChannel);
       router.push(`${pathname}`);
     }
@@ -32,7 +42,11 @@ export function Results() {
       try {
         const newResultsJson = await newResults.json();
 
-        setResults((newResultsJson.channels as Channels[]).sort((a, b) => (a.id! > b.id! ? 1 : -1)));
+        setResults(
+          (newResultsJson.channels as Channels[]).sort((a, b) =>
+            a.id! > b.id! ? 1 : -1
+          )
+        );
       } catch (err) {
         console.error(err);
       }
