@@ -189,7 +189,7 @@ export function Results() {
           </a>
         </div>
       </div>
-      <div className="min-h-[600px] border-b">
+      <div className="min-h-[calc(100vh-101px)] border-b">
         {results.length === 0 ? (
           <div className="px-2 py-2">Loading thousands of channels...</div>
         ) : (

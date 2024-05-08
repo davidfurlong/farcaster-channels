@@ -90,7 +90,7 @@ export function DataTable<TData, TValue>({
       style={{
         overflow: "auto", //our scrollable table container
         position: "relative", //needed for sticky header
-        height: "600px", //should be a fixed height
+        height: "calc(100vh - 101px)", //should be a fixed height
       }}
     >
       <div className="flex items-center py-1">
