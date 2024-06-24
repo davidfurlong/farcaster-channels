@@ -21,3 +21,5 @@ CREATE INDEX channels_created_at ON channels (created_at);
 CREATE INDEX channels_lead_username ON channels((lead->>'username'));
 CREATE INDEX channels_lead_display_name ON channels((lead->>'display_name'));
 CREATE INDEX channels_hosts_username ON channels((hosts->>'username'));
+
+CREATE INDEX channels_hosts_username_in ON channels(jsonb_path_query_array(hosts, '$.username'));
