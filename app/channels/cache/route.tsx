@@ -21,7 +21,7 @@ export async function GET() {
   // fetch all channels
   while (true) {
     const nextPage = await fetch(
-      `https://api.neynar.com/v2/farcaster/channel/list?limit=50&cursor=${cursor}`,
+      `https://api.neynar.com/v2/farcaster/channel/list?limit=200&cursor=${cursor}`,
       options
     )
       .then((response) => response.json())
